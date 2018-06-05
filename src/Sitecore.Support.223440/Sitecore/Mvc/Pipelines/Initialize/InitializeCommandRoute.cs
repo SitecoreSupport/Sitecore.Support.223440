@@ -2,25 +2,20 @@
 using Sitecore.Pipelines;
 using System.Web.Mvc;
 using System.Web.Routing;
-using Sitecore.Diagnostics;
+using Sitecore.Mvc.Pipelines.Initialize;
 
 namespace Sitecore.Support.Sitecore.Mvc.Pipelines.Initialize
 {
-  public class InitializeCommandRoute
+  public class IInitializeCommandRoute : InitializeCommandRoute
   {
-    #region Original code
-    public virtual void Process(PipelineArgs args)
-    {
-      Assert.ArgumentNotNull(args, "args");
-      this.RegisterRoutes(RouteTable.Routes, args);
-    }
-
-    protected virtual void RegisterRoutes(RouteCollection routes, PipelineArgs args)
+    #region Modified code
+    protected override void RegisterRoutes(RouteCollection routes, PipelineArgs args)
     {
       string commandRoutePrefix = SpeakSettings.Mvc.CommandRoutePrefix;
-      routes.MapRoute("Sitecore.Speak.Commands", commandRoutePrefix + "{controller}/{action}");
-      routes.MapRoute("Sitecore.Speak", "sitecore/shell/api/sitecore/{controller}/{action}");
+      string[] namespaces = { "Sitecore.Controllers" };
+      routes.MapRoute("Sitecore.Speak.Commands", commandRoutePrefix + "{controller}/{action}", namespaces);
+      routes.MapRoute("Sitecore.Speak", "sitecore/shell/api/sitecore/{controller}/{action}", namespaces);
     }
-    #endregion Original code
+    #endregion Modified code
   }
 }
